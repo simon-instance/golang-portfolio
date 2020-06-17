@@ -2,9 +2,8 @@ package models
 
 import (
 	"cloud.google.com/go/firestore"
-	"context"
-	firebase "firebase.google.com/go"
 	"log"
+	"context"
 )
 
 type Post struct {
@@ -16,6 +15,12 @@ type Post struct {
 
 func GetAll(ctx context.Context, client *firestore.Client) {
 	posts := client.Collection("posts").Documents(ctx)
+	for {
+		doc, err := posts.Next()
 
-	log.Printf("posts: %v", *posts)
+		if err != nil {
+			return
+		}
+		log.Printf("Data: %v", doc.Data())
+	}
 }

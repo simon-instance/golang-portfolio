@@ -1,14 +1,14 @@
 package main
 
 import (
-	Post "./models"
+	Post "github.com/scrummer123/golang-portfolio/models"
 )
 
 func main() {
-	ctx, client, err := initializeFirestore()
+	context, client, err := initializeFirestore()
 	handleError(err)
 
-	Post.GetAll(ctx, client)
+	Post.GetAll(context, client)
 
 	defer client.Close()
 }
