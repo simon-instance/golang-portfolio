@@ -1,14 +1,29 @@
 package main
 
 import (
-	Post "github.com/scrummer123/golang-portfolio/models"
+	"fmt"
+	"net/http"
+	"github.com/go-chi/chi"
+	"github.com/scrummer123/golang-portfolio/handlers"
 )
 
 func main() {
-	context, client, err := initializeFirestore()
-	handleError(err)
+	r := chi.NewRouter()
 
-	Post.GetAll(context, client)
+	r.Mount("/api/posts", PostRoutes())
 
-	defer client.Close()
+	fmt.Println("Server listen at :3000")
+	http.ListenAndServe("127.0.0.1:3000", r)
+}
+
+func PostRoutes() chi.Router {
+	router := chi.NewRouter()
+
+	router.Get("/", handlers.AllPosts)
+	router.Get("/{id}", handlers.PostById)
+	router.Post("/", handlers.CreatePost)
+	router.Put("/{id}", handlers.UpdatePost)
+	router.Delete("/{id}", handlers.DeletePost)
+	
+	return router
 }
