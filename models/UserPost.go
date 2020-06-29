@@ -17,8 +17,8 @@ type UserPost struct {
 
 var userPosts map[string]UserPost = make(map[string]UserPost)
 
-// NewUserPost Make a new user
-func NewUserPost(Title string, Content string, UserID string, DocID string) UserPost {
+// New Make a new post
+func (UserPost) New(Title string, Content string, UserID string, DocID string) UserPost {
 	post := &UserPost{Title: Title, Content: Content, UserID: UserID}
 
 	userPosts[DocID] = *post
@@ -26,8 +26,8 @@ func NewUserPost(Title string, Content string, UserID string, DocID string) User
 	return *post
 }
 
-// GetAll returns all users
-func GetAll() map[string]UserPost {
+// GetAll returns all posts
+func (UserPost) GetAll() map[string]UserPost {
 	log.SetPrefix("[models.GetAll()] :: ")
 	db := database.GetFirestoreClient()
 
@@ -48,7 +48,7 @@ func GetAll() map[string]UserPost {
 		content, contentIsset := data["content"].(string)
 
 		if uidIsset && titleIsset && contentIsset {
-			post := NewUserPost(title, content, uid, doc.Ref.ID)
+			post := UserPost{}.New(title, content, uid, doc.Ref.ID)
 
 			userPosts[doc.Ref.ID] = post
 		}
@@ -56,6 +56,13 @@ func GetAll() map[string]UserPost {
 		log.Printf("%v", uidIsset)
 	}
 
-	database.CloseFirestore(db)
 	return userPosts
+}
+
+// GetByID returns post by post id
+func (UserPost) GetByID(PostID string) (UserPost, bool) {
+	UserPost{}.GetAll()
+
+	post, postIsset := userPosts[PostID]
+	return post, postIsset
 }

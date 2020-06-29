@@ -5,23 +5,26 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/scrummer123/golang-portfolio/database"
+	"github.com/go-chi/chi"
 	"github.com/scrummer123/golang-portfolio/models"
 )
 
-var firestoreClient = database.GetFirestoreClient()
-var posts []models.UserPost
-
 // AllPosts (get) fetches firestore user posts and returns them as a page
 func AllPosts(w http.ResponseWriter, r *http.Request) {
-	log.Println("test")
-	posts := models.GetAll()
+	posts := models.UserPost{}.GetAll()
 	respondWithJSON(w, http.StatusOK, posts)
 }
 
 // PostByID (get) fetches a signle firestore user post by postid
 func PostByID(w http.ResponseWriter, r *http.Request) {
+	PostID := chi.URLParam(r, "id")
+	post, postIsset := models.UserPost{}.GetByID(PostID)
 
+	if postIsset {
+		respondWithJSON(w, http.StatusOK, post)
+	} else {
+		respondWithError(w, http.StatusNotFound, "No post with that id in our database")
+	}
 }
 
 // CreatePost (post) save post from user
