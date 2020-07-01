@@ -29,13 +29,50 @@ func PostByID(w http.ResponseWriter, r *http.Request) {
 
 // CreatePost (post) save post from user
 func CreatePost(w http.ResponseWriter, r *http.Request) {
-	// var post models.Post
+	r.ParseForm()
 
+	Title := r.Form.Get("title")
+	Content := r.Form.Get("content")
+	UserID := r.Form.Get("user_id")
+
+	userPost := &models.UserPost{
+		Content: Title,
+		Title:   Content,
+		UserID:  UserID,
+	}
+
+	success := models.UserPost{}.Create(userPost)
+
+	if success == true {
+		respondWithJSON(w, http.StatusOK, nil)
+	} else {
+		respondWithError(w, http.StatusInternalServerError, "Server error occured")
+	}
 }
 
 // UpdatePost (put) update post from user
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 
+	//PostID := r.Form.Get("id")
+
+	//Title := r.Form.Get("title")
+	//Content := r.Form.Get("content")
+	//UserID := r.Form.Get("user_id")
+
+	//userPost := &models.UserPost{
+	//Content: Title,
+	//Title:   Content,
+	//UserID:  UserID,
+	//}
+
+	//success := models.UserPost{}.Update(PostID, userPost)
+
+	//if success {
+	//respondWithJSON(w, http.StatusOK, nil)
+	//} else {
+	//respondWithError(w, http.StatusInternalServerError, "Server error occured")
+	//}
 }
 
 // DeletePost (delete) deletes post from user

@@ -26,7 +26,7 @@ func (UserPost) New(Title string, Content string, UserID string, DocID string) U
 	return *post
 }
 
-// GetAll returns all posts
+// GetAll returns all posts and refreshes the local userposts variable
 func (UserPost) GetAll() map[string]UserPost {
 	log.SetPrefix("[models.GetAll()] :: ")
 	db := database.GetFirestoreClient()
@@ -43,14 +43,18 @@ func (UserPost) GetAll() map[string]UserPost {
 
 		data := doc.Data()
 
-		uid, uidIsset := data["user_id"].(string)
-		title, titleIsset := data["title"].(string)
-		content, contentIsset := data["content"].(string)
+		uid, uidIsset := data["UserID"].(string)
+		title, titleIsset := data["Title"].(string)
+		content, contentIsset := data["Content"].(string)
 
 		if uidIsset && titleIsset && contentIsset {
-			post := UserPost{}.New(title, content, uid, doc.Ref.ID)
+			post := &UserPost{
+				Content: content,
+				Title:   title,
+				UserID:  uid,
+			}
 
-			userPosts[doc.Ref.ID] = post
+			userPosts[doc.Ref.ID] = *post
 		}
 
 		log.Printf("%v", uidIsset)
@@ -66,3 +70,21 @@ func (UserPost) GetByID(PostID string) (UserPost, bool) {
 	post, postIsset := userPosts[PostID]
 	return post, postIsset
 }
+
+// Create makes a new document in the database
+// @return true if successful, false if not successful
+func (UserPost) Create(userPost *UserPost) bool {
+	db := database.GetFirestoreClient()
+
+	doc := db.Collection("posts").NewDoc()
+	_, err := doc.Set(context.Background(), userPost)
+
+	if err != nil {
+		log.Fatalf("%v", err)
+		return false
+	}
+
+	return true
+}
+
+// Init initializes package//func (UserPost) Update(PostID string, NewVal )

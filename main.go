@@ -4,17 +4,21 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/scrummer123/golang-portfolio/handlers"
-
-	"github.com/scrummer123/golang-portfolio/database"
-
 	"github.com/go-chi/chi"
+	"github.com/go-chi/jwtauth"
+	"github.com/scrummer123/golang-portfolio/database"
+	"github.com/scrummer123/golang-portfolio/handlers"
+	"github.com/scrummer123/golang-portfolio/token"
 )
+
+func init() {
+	token.Init()
+}
 
 func main() {
 	// Chi stuff
 	r := chi.NewRouter()
-	r.Mount("/api/posts", postRoutes())
+	r.Mount("/api", apiRoutes(r))
 	// End chi stuff
 
 	// Fire stuff
@@ -30,15 +34,37 @@ func main() {
 	}
 }
 
-// Global app routes
+// api routes
+func apiRoutes(r chi.Router) chi.Router {
+	r.Mount("/posts", postRoutes())
+	r.Mount("/auth", authRoutes())
+
+	return r
+}
+
+// auth app routes
+func authRoutes() {
+	r := chi.NewRouter()
+
+	// TODO
+	r.Post("/register", handlers.SubmitRegister)
+	r.Post("/register", handlers.SubmitRegister)
+}
+
+// post app routes
 func postRoutes() chi.Router {
-	router := chi.NewRouter()
+	r := chi.NewRouter()
 
-	router.Get("/", handlers.AllPosts)
-	router.Get("/{id}", handlers.PostByID)
-	router.Post("/", handlers.CreatePost)
-	router.Put("/{id}", handlers.UpdatePost)
-	router.Delete("/{id}", handlers.DeletePost)
+	r.Get("/", handlers.AllPosts)
+	r.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(token.GetTokenAuth()))
+		r.Use(jwtauth.Authenticator)
 
-	return router
+		r.Get("/{id}", handlers.PostByID)
+		r.Post("/", handlers.CreatePost)
+		r.Put("/{id}", handlers.UpdatePost)
+		r.Delete("/{id}", handlers.DeletePost)
+	})
+
+	return r
 }
