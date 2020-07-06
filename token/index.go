@@ -3,7 +3,9 @@ package token
 import (
 	"io/ioutil"
 	"log"
+	"net/http"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/jwtauth"
 )
 
@@ -20,11 +22,28 @@ func Init() {
 
 	// For debugging/example purposes, we generate and print
 	// a sample jwt token with claims `user_id:123` here:
-	//_, tokenString, _ := tokenAuth.Encode(jwt.MapClaims{"user_id": 123})
 
 }
 
-// GetTokenAuth
+// GetTokenAuth gets the key which values should be encrypted with
 func GetTokenAuth() *jwtauth.JWTAuth {
 	return tokenAuth
+}
+
+// MakeTokenData encrypts the data, so it can be stored in a user storage cookie
+func MakeTokenData(j jwt.Claims) (string, error) {
+	_, tokenString, err := tokenAuth.Encode(j)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
+// SetCookie sets cookie with encrypted data about which api routes the user is allowed to access
+func SetCookie(w http.ResponseWriter, cookieData string) {
+	http.SetCookie(w, &http.Cookie{
+		Name:  "access-rights",
+		Value: cookieData,
+	})
 }

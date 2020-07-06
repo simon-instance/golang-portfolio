@@ -36,34 +36,32 @@ func main() {
 
 // api routes
 func apiRoutes(r chi.Router) chi.Router {
-	r.Mount("/posts", postRoutes())
+	r.Mount("/users", userRoutes())
 	r.Mount("/auth", authRoutes())
 
 	return r
 }
 
-// auth app routes
-func authRoutes() {
+func authRoutes() chi.Router {
 	r := chi.NewRouter()
 
-	// TODO
-	r.Post("/register", handlers.SubmitRegister)
-	r.Post("/register", handlers.SubmitRegister)
+	r.Post("/new", handlers.Register)
+	r.Post("/{id}", handlers.Login)
+
+	return r
 }
 
 // post app routes
-func postRoutes() chi.Router {
+func userRoutes() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", handlers.AllPosts)
+	r.Get("/", handlers.AllUsers)
 	r.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(token.GetTokenAuth()))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/{id}", handlers.PostByID)
-		r.Post("/", handlers.CreatePost)
-		r.Put("/{id}", handlers.UpdatePost)
-		r.Delete("/{id}", handlers.DeletePost)
+		r.Put("/{id}", handlers.UpdateUser)
+		r.Delete("/{id}", handlers.DeleteUser)
 	})
 
 	return r
