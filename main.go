@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/scrummer123/golang-portfolio/database"
 	"github.com/scrummer123/golang-portfolio/handlers"
+	"github.com/scrummer123/golang-portfolio/helpers"
 	"github.com/scrummer123/golang-portfolio/token"
 )
 
@@ -55,13 +56,15 @@ func authRoutes() chi.Router {
 func userRoutes() chi.Router {
 	r := chi.NewRouter()
 
+	r.Use(helpers.UserAuth)
 	r.Get("/", handlers.AllUsers)
+	r.Get("/testcookie", handlers.TestCookie)
 	r.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(token.GetTokenAuth()))
 		r.Use(jwtauth.Authenticator)
 
-		r.Put("/{id}", handlers.UpdateUser)
-		r.Delete("/{id}", handlers.DeleteUser)
+		r.Put("/{id}/update", handlers.UpdateUser)
+		r.Delete("/{id}/delete", handlers.DeleteUser)
 	})
 
 	return r

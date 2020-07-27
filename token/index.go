@@ -40,6 +40,16 @@ func MakeTokenData(j jwt.Claims) (string, error) {
 	return tokenString, nil
 }
 
+// GetTokenData decodes cookie data, so it can read the data inside of the token
+func GetTokenData(d string) (*jwt.Token, error) {
+	log.SetPrefix("[token.GetTokenData] :: ")
+	token, err := tokenAuth.Decode(d)
+	if err != nil {
+		return nil, err
+	}
+	return token, nil
+}
+
 // SetCookie sets cookie with encrypted data about which api routes the user is allowed to access
 func SetCookie(w http.ResponseWriter, cookieData string) {
 	http.SetCookie(w, &http.Cookie{

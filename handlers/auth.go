@@ -1,13 +1,11 @@
 package handlers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/scrummer123/golang-portfolio/helpers"
 	"github.com/scrummer123/golang-portfolio/models"
-	"github.com/scrummer123/golang-portfolio/token"
 )
 
 // Register (POST) creates an account for the user and sets an encrypted cookie
@@ -29,31 +27,34 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	user, uerr := models.User{}.Create(user)
 
 	if uerr != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+		helpers.RespondWithError(w, http.StatusInternalServerError, uerr.Error())
 	} else {
-		claims := jwt.MapClaims{
-			"posts": "all",
-		}
-		encoded, err := token.MakeTokenData(claims)
-		if err != nil {
-			respondWithError(w, http.StatusInternalServerError, err.Error())
-		}
+		//jar, _ := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
 
-		cookie := &http.Cookie{
-			Name:     "access_token",
-			Value:    encoded,
-			MaxAge:   6000,
-			Path:     "/",
-			Secure:   false,
-			HttpOnly: true,
-		}
+		//claims := jwt.MapClaims{
+		//"posts": "all",
+		//}
+		//encoded, err := token.MakeTokenData(claims)
+		//if err != nil {
+		//helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		//}
 
-		http.SetCookie(w, cookie)
-		fmt.Fprintf(w, "Yay")
-		cooki, err := r.Cookie("access_token")
-		fmt.Fprint(w, cooki, err)
+		//jar := make([]*http.Cookie, 1)
 
-		respondWithJSON(w, http.StatusOK, user)
+		//cookie := &http.Cookie{
+		//Name:     "access_token",
+		//Value:    encoded,
+		//MaxAge:   6000,
+		//Path:     "/",
+		//Secure:   true,
+		//HttpOnly: false,
+		//}
+
+		//jar = append(jar, cookie)
+
+		//http.SetCookie(w, cookie)
+
+		helpers.RespondWithJSON(w, http.StatusOK, user)
 	}
 }
 
@@ -75,8 +76,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	user, uerr := models.User{}.Create(user)
 
 	if uerr != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
 	} else {
-		respondWithJSON(w, http.StatusOK, user)
+		helpers.RespondWithJSON(w, http.StatusOK, user)
 	}
 }

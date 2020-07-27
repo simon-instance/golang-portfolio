@@ -1,20 +1,22 @@
 package handlers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi"
+	"github.com/scrummer123/golang-portfolio/helpers"
 	"github.com/scrummer123/golang-portfolio/models"
 	"github.com/scrummer123/golang-portfolio/token"
 	"golang.org/x/crypto/bcrypt"
 )
 
+var client *http.Client
+
 // AllUsers (get) fetches firestore user posts and returns them as a page
 func AllUsers(w http.ResponseWriter, r *http.Request) {
-	users := models.User{}.GetAll()
+	//users := models.User{}.GetAll()
 
 	claims := jwt.MapClaims{
 		"posts": "all",
@@ -25,25 +27,30 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie := &http.Cookie{
-		Name:     "access_token",
-		Value:    encoded,
-		MaxAge:   6000,
-		Path:     "/",
-		Secure:   false,
-		HttpOnly: true,
+		Name:  "access_token",
+		Value: encoded,
 	}
 
 	http.SetCookie(w, cookie)
 
-	log.Print(r.Cookie("access_token"))
+	//helpers.RespondWithJSON(w, http.StatusOK, users)
+}
 
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(200)
-	u, marshalErr := json.Marshal(users)
-	if marshalErr != nil {
-		log.Fatal(marshalErr.Error())
+// TestCookie tests the cookie
+func TestCookie(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("access_token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			log.Printf("Error finding cookie: %v", err)
+		}
+		log.Fatal(err)
 	}
-	w.Write(u)
+	cval := cookie.Value
+	token.GetTokenData(cval)
+
+	log.Println(cval)
+
+	//helpers.RespondWithJSON(w, http.StatusOK, cval)
 }
 
 // UserByID (get) fetches a single firestore user by its id
@@ -52,9 +59,9 @@ func UserByID(w http.ResponseWriter, r *http.Request) {
 	post, postIsset := models.User{}.GetByID(PostID)
 
 	if postIsset {
-		respondWithJSON(w, http.StatusOK, post)
+		helpers.RespondWithJSON(w, http.StatusOK, post)
 	} else {
-		respondWithError(w, http.StatusNotFound, "No post with that id in our database")
+		helpers.RespondWithError(w, http.StatusNotFound, "No post with that id in our database")
 	}
 }
 
@@ -88,9 +95,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	u, err := models.User{}.Create(User)
 
 	if err == nil {
-		respondWithJSON(w, http.StatusOK, u)
+		helpers.RespondWithJSON(w, http.StatusOK, u)
 	} else {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
 	}
 }
 
@@ -122,25 +129,4 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 // DeleteUser (delete) deletes single user
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 
-}
-
-func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-	log.SetPrefix("[jsonResponseError] :: ")
-	response, err := json.Marshal(payload)
-
-	if err != nil {
-		log.Fatalf("Error => %v", err)
-		respondWithError(w, http.StatusInternalServerError, "Something went wrong on our server")
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	_, err = w.Write(response)
-	if err != nil {
-		log.Fatalf("Error => %v", err)
-	}
-}
-
-func respondWithError(w http.ResponseWriter, code int, msg string) {
-	respondWithJSON(w, code, map[string]string{"message": msg})
 }
