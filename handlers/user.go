@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi"
@@ -16,24 +17,40 @@ var client *http.Client
 
 // AllUsers (get) fetches firestore user posts and returns them as a page
 func AllUsers(w http.ResponseWriter, r *http.Request) {
-	//users := models.User{}.GetAll()
-
-	claims := jwt.MapClaims{
+	accessTokenClaims := jwt.MapClaims{
 		"/api/users/{id}/find": true,
 	}
-	encoded, err := token.MakeTokenData(claims)
+
+	refreshTokenClaims := jwt.MapClaims{
+		"UserID": "1jTbmeha8IsVcFBE5V4z",
+	}
+
+	accessTokenEncoded, err := token.MakeTokenData(accessTokenClaims)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	cookie := &http.Cookie{
-		Name:  "access_token",
-		Value: encoded,
+	refreshTokenEncoded, err := token.MakeTokenData(refreshTokenClaims)
+	if err != nil {
+		log.Fatal(err.Error())
 	}
 
-	http.SetCookie(w, cookie)
+	refreshTokenCookie := &http.Cookie{
+		Name:  "refresh_token",
+		Value: refreshTokenEncoded,
+	}
 
-	helpers.RespondWithJSON(w, http.StatusOK, cookie)
+	expiringDate := time.Now().Local().Add(time.Second * 5)
+	accessTokenCookie := &http.Cookie{
+		Name:    "access_token",
+		Value:   accessTokenEncoded,
+		Expires: expiringDate,
+	}
+
+	http.SetCookie(w, refreshTokenCookie)
+	http.SetCookie(w, accessTokenCookie)
+
+	helpers.RespondWithJSON(w, http.StatusOK, "yeet")
 }
 
 // UserByID (get) fetches a single firestore user by its id
