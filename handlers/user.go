@@ -19,7 +19,7 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 	//users := models.User{}.GetAll()
 
 	claims := jwt.MapClaims{
-		"posts": "all",
+		"/api/users/{id}/find": true,
 	}
 	encoded, err := token.MakeTokenData(claims)
 	if err != nil {
@@ -33,33 +33,16 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, cookie)
 
-	//helpers.RespondWithJSON(w, http.StatusOK, users)
-}
-
-// TestCookie tests the cookie
-func TestCookie(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("access_token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			log.Printf("Error finding cookie: %v", err)
-		}
-		log.Fatal(err)
-	}
-	cval := cookie.Value
-	token.GetTokenData(cval)
-
-	log.Println(cval)
-
-	//helpers.RespondWithJSON(w, http.StatusOK, cval)
+	helpers.RespondWithJSON(w, http.StatusOK, cookie)
 }
 
 // UserByID (get) fetches a single firestore user by its id
 func UserByID(w http.ResponseWriter, r *http.Request) {
-	PostID := chi.URLParam(r, "id")
-	post, postIsset := models.User{}.GetByID(PostID)
+	UserID := chi.URLParam(r, "id")
+	user, userIsset := models.User{}.GetByID(UserID)
 
-	if postIsset {
-		helpers.RespondWithJSON(w, http.StatusOK, post)
+	if userIsset {
+		helpers.RespondWithJSON(w, http.StatusOK, user)
 	} else {
 		helpers.RespondWithError(w, http.StatusNotFound, "No post with that id in our database")
 	}
