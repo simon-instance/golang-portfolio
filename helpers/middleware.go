@@ -16,7 +16,9 @@ import (
 func UserAuth(next http.Handler) http.Handler {
 	log.SetPrefix("[middleware.UserAuth] :: ")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if accessGranted(w, r) {
+		pass := accessGranted(w, r)
+		log.Printf("pass: %v", pass)
+		if pass {
 			next.ServeHTTP(w, r)
 		}
 	})
@@ -24,27 +26,36 @@ func UserAuth(next http.Handler) http.Handler {
 
 // accessGranted looks at user cookie for api access rights, also invalid requests are being denied (exposing less info is better for privacy reasons)
 func accessGranted(w http.ResponseWriter, r *http.Request) bool {
+	var accessTokenCookie *http.Cookie
 	accessTokenCookie, err := r.Cookie("access_token")
 
-	var cookie *http.Cookie
 	if err != nil {
-		cookie = updateTokens(w, r)
+		// Cookie returned from updateTokens function
+		accessTokenCookie = updateTokens(w, r)
+		log.Printf("accessTokenCookie: %v", accessTokenCookie)
+		if accessTokenCookie == nil {
+			return false
+		}
 	}
-
-	log.SetPrefix("[handlers.accessGranted]")
 
 	// Check url format
 	correctFormat, err := regexp.MatchString(`\/api\/users\/[a-zA-Z0-9]{19}\/(find|update|delete)`, r.URL.Path)
-
-	log.Println(cookie)
-	var JWT *jwt.Token
-	if cookie != nil {
-		JWT, err = token.GetTokenData(cookie.Value)
-	} else {
-		JWT, err = token.GetTokenData(accessTokenCookie.Value)
-	}
 	if err != nil {
 		return false
+	}
+
+	var JWT *jwt.Token
+	if accessTokenCookie != nil {
+		JWT, err = token.GetTokenData(accessTokenCookie.Value)
+		if err != nil {
+			return false
+		}
+	} else {
+		log.Println(accessTokenCookie)
+		JWT, err = token.GetTokenData(accessTokenCookie.Value)
+		if err != nil {
+			return false
+		}
 	}
 
 	mapClaims := JWT.Claims.(jwt.MapClaims)
@@ -64,7 +75,6 @@ func accessGranted(w http.ResponseWriter, r *http.Request) bool {
 			break
 		}
 	}
-	log.Println(correctFormat, correctRights)
 	if correctFormat && correctRights {
 		return true
 	}
@@ -78,21 +88,33 @@ func accessGranted(w http.ResponseWriter, r *http.Request) bool {
 
 func updateTokens(w http.ResponseWriter, r *http.Request) *http.Cookie {
 	frontEndID := r.Header.Get("X-UserID")
+	if frontEndID == "" {
+		return nil
+	}
 
 	refreshTokenCookie, err := r.Cookie("refresh_token")
+	log.Printf("refresh token cookie: %v", refreshTokenCookie)
 	if err != nil {
-		log.Println(err)
+		return nil
 	}
 
 	tokenData, err := token.GetTokenData(refreshTokenCookie.Value)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
+		return nil
 	}
 	mapClaims := tokenData.Claims.(jwt.MapClaims)
 	UserID, UserIDIsset := mapClaims["UserID"]
 
 	log.SetPrefix("[handlers.updateTokens] :: ")
+
+	log.Printf("Userid == Frontendid: %v", UserID == frontEndID)
 	if UserIDIsset && UserID == frontEndID {
+		//refreshTokenCookie = updateRefreshToken(frontEndID, r, w)
+		if refreshTokenCookie == nil {
+			return nil
+		}
+
 		accessTokenClaims := jwt.MapClaims{
 			"/api/users/{id}/find": true,
 		}
@@ -102,7 +124,7 @@ func updateTokens(w http.ResponseWriter, r *http.Request) *http.Cookie {
 			log.Fatal(err.Error())
 		}
 
-		expiringDate := time.Now().Local().Add(time.Second * 50)
+		expiringDate := time.Now().Local().Add(time.Second * 20)
 		accessTokenCookie := &http.Cookie{
 			Name:    "access_token",
 			Value:   accessTokenEncoded,
@@ -113,4 +135,28 @@ func updateTokens(w http.ResponseWriter, r *http.Request) *http.Cookie {
 		return accessTokenCookie
 	}
 	return nil
+}
+
+func updateRefreshToken(frontEndID string, r *http.Request, w http.ResponseWriter) *http.Cookie {
+	log.Printf("UPDATE REFRESH CALLED")
+	refreshTokenClaims := jwt.MapClaims{
+		"UserID": frontEndID,
+	}
+
+	refreshTokenEncoded, err := token.MakeTokenData(refreshTokenClaims)
+	if err != nil {
+		return nil
+	}
+
+	expiringDate := time.Now().Local().Add(time.Second * 40)
+
+	refreshTokenCookie := &http.Cookie{
+		Name:    "refresh_token",
+		Value:   refreshTokenEncoded,
+		Expires: expiringDate,
+	}
+
+	http.SetCookie(w, refreshTokenCookie)
+
+	return refreshTokenCookie
 }
