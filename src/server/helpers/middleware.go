@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/scrummer123/golang-portfolio/token"
+	"github.com/scrummer123/golang-portfolio/src/server/token"
 )
 
 // UserAuth checks in encrypted cookie if requesting user has rights to execute the current url

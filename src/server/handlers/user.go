@@ -7,9 +7,9 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi"
-	"github.com/scrummer123/golang-portfolio/helpers"
-	"github.com/scrummer123/golang-portfolio/models"
-	"github.com/scrummer123/golang-portfolio/token"
+	"github.com/scrummer123/golang-portfolio/src/server/helpers"
+	"github.com/scrummer123/golang-portfolio/src/server/models"
+	"github.com/scrummer123/golang-portfolio/src/server/token"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -17,7 +17,7 @@ func InitializeFirestore() {
 
 	// Use a service account
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("/home/simon/Development/go/src/github.com/scrummer123/golang-portfolio/database/simons-portfolio-2add992d213c.json")
+	sa := option.WithCredentialsFile("/home/simon/Development/go/src/github.com/scrummer123/golang-portfolio/src/server/database/simons-portfolio-2add992d213c.json")
 
 	conf := &firebase.Config{ProjectID: "simons-portfolio"}
 	app, err := firebase.NewApp(ctx, conf, sa)

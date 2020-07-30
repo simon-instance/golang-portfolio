@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/scrummer123/golang-portfolio/database"
+	"github.com/scrummer123/golang-portfolio/src/server/database"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/api/iterator"
 )

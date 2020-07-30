@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/scrummer123/golang-portfolio/helpers"
-	"github.com/scrummer123/golang-portfolio/models"
+	"github.com/scrummer123/golang-portfolio/src/server/helpers"
+	"github.com/scrummer123/golang-portfolio/src/server/models"
 )
 
 // Register (POST) creates an account for the user and sets an encrypted cookie

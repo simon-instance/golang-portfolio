@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/scrummer123/golang-portfolio/database"
-	"github.com/scrummer123/golang-portfolio/handlers"
-	"github.com/scrummer123/golang-portfolio/helpers"
-	"github.com/scrummer123/golang-portfolio/token"
+	"github.com/scrummer123/golang-portfolio/src/server/database"
+	"github.com/scrummer123/golang-portfolio/src/server/handlers"
+	"github.com/scrummer123/golang-portfolio/src/server/helpers"
+	"github.com/scrummer123/golang-portfolio/src/server/token"
 )
 
 func init() {
@@ -19,6 +19,7 @@ func main() {
 	// Chi stuff
 	r := chi.NewRouter()
 	r.Mount("/api", apiRoutes(r))
+	r.Mount("/app", frontEndRoutes(r))
 	// End chi stuff
 
 	// Fire stuff
@@ -32,6 +33,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error while serving => %v", err)
 	}
+}
+
+func frontEndRoutes(r chi.Router) chi.Router {
+	r.Get("/", handlers.ReactApp)
+
+	return r
 }
 
 // api routes
