@@ -4,3 +4,4 @@ bin/
 src/server/token/bytes.txt
 src/client/node_modules/
 src/server/database/simons-portfolio-2add992d213c.json
+.main.go.swp
