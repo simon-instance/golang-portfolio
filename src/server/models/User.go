@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/mitchellh/mapstructure"
@@ -18,6 +19,7 @@ type UserPost struct {
 
 // User => Username: litteraly means how its called, Password: password. Dont show the password when getting the user data
 type User struct {
+	ID       string    `json:"id"`
 	Username string    `json:"username"`
 	Password []byte    `json:"-"`
 	Post     *UserPost `json:"Post"`
@@ -81,7 +83,56 @@ func (User) Create(u User) (User, error) {
 		return User{}, err
 	}
 
+	u.ID = doc.ID
 	users[doc.ID] = u
 
 	return u, nil
+}
+
+// LoginRequest checks in the database if the user has the right data to log in with
+// returns error if the user doesn't have the rights to log in
+func (User) LoginRequest(u User) (User, error) {
+	db := database.GetFirestoreClient()
+
+	pass, err := bcrypt.GenerateFromPassword(u.Password, bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	i := db.Collection("users").Where("username", "==", u.Username).Limit(1).Documents(context.Background())
+
+	for {
+		doc, err := i.Next()
+
+		if err != nil {
+			break
+		}
+
+		data := doc.Data()
+		DBpass, DBpassExists := data["Password"].([]byte)
+		Post, PostExists := data["Post"].(*UserPost)
+		Username, UsernameExists := data["Username"].(string)
+
+		if DBpassExists && PostExists && UsernameExists {
+			comparePass := string(pass)
+			compareDBpass := string(DBpass)
+
+			if compareDBpass == comparePass {
+				user := &User{
+					ID:       doc.Ref.ID,
+					Post:     Post,
+					Username: Username,
+					Password: pass,
+				}
+
+				return *user, nil
+			}
+
+			err = errors.New("Verkeerd wachtwoord ingevoerd")
+			return User{}, err
+		}
+	}
+	err = errors.New("Gebruiker niet gevonden")
+
+	return User{}, err
 }

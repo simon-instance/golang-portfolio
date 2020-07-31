@@ -29,30 +29,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	if uerr != nil {
 		helpers.RespondWithError(w, http.StatusInternalServerError, uerr.Error())
 	} else {
-		//jar, _ := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
-
-		//claims := jwt.MapClaims{
-		//"posts": "all",
-		//}
-		//encoded, err := token.MakeTokenData(claims)
-		//if err != nil {
-		//helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		//}
-
-		//jar := make([]*http.Cookie, 1)
-
-		//cookie := &http.Cookie{
-		//Name:     "access_token",
-		//Value:    encoded,
-		//MaxAge:   6000,
-		//Path:     "/",
-		//Secure:   true,
-		//HttpOnly: false,
-		//}
-
-		//jar = append(jar, cookie)
-
-		//http.SetCookie(w, cookie)
 
 		helpers.RespondWithJSON(w, http.StatusOK, user)
 	}
@@ -68,12 +44,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	username := r.Form.Get("username")
 	password := []byte(r.Form.Get("password"))
 
+	log.Println(username)
+
 	user := models.User{
 		Username: username,
 		Password: password,
 	}
 
-	user, uerr := models.User{}.Create(user)
+	user, uerr := models.User{}.LoginRequest(user)
 
 	if uerr != nil {
 		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())

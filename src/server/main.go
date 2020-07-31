@@ -58,7 +58,7 @@ func authRoutes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Post("/new", handlers.Register)
-	r.Post("/{id}", handlers.Login)
+	r.Post("/login", handlers.Login)
 
 	return r
 }

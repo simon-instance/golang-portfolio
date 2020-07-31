@@ -1,28 +1,16 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
 
-function App() {
+import { CSSReset, ThemeProvider, ColorModeProvider } from "@chakra-ui/core";
+
+const App: React.FC = ({ children }) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          NPM <code>src/App.tsx</code> and save to reload.
-        </p>
-        <p>LOOOL HIJ DOET HET</p>
-        <p>SIKTER ANANI</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider>
+      <ColorModeProvider>
+        <CSSReset />
+        {children}
+      </ColorModeProvider>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
