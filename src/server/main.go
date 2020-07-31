@@ -40,7 +40,6 @@ func main() {
 
 func frontEndRoutes(r chi.Router) chi.Router {
 	workDir, _ := os.Getwd()
-	log.Println(workDir)
 	filesDir := http.Dir(filepath.Join(workDir, "../client/build"))
 	fileServer(r, "/", filesDir)
 

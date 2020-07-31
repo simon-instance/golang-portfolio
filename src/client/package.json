@@ -10,9 +10,11 @@
     "@types/node": "^12.12.53",
     "@types/react": "^16.9.43",
     "@types/react-dom": "^16.9.8",
+    "nodemon": "^2.0.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "ts-node": "^8.10.2",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -20,7 +22,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+    "nm:watch": "nodemon -e ts,tsx -w ./ --ignore 'src/**/*.spec.ts' -x 'npm run build'",
+    "test-watch": "nodemon  -x npm run test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,9 +42,10 @@
     ]
   },
   "watch": {
-    "build": "src/"
+    "build": "src/*.tsx"
   },
   "devDependencies": {
     "npm-watch": "^0.6.0"
-  }
+  },
+  "type": "module"
 }
