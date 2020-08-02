@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { TryCatchHandler } from "../../Handlers";
 import {
   Flex,
   Box,
@@ -59,24 +60,20 @@ const LoginForm: React.FC = () => {
         }),
       };
 
-      let data: { error: { status: boolean }; response: object | null } = {
-        error: {
-          status: false,
-        },
-        response: null,
-      };
+      const Handler: TryCatchHandler = new TryCatchHandler();
+      let data: object = Handler.getData;
+      console.log(data);
 
-      try {
-        const response: any = await fetch(
-          "http://127.0.0.1:8080/api/auth/login",
-          requestOptions
-        );
-        data.response = await response.json();
-        data.error.status = false;
-      } catch (e) {
-        data.response = null;
-        data.error.status = true;
-      }
+      //try {
+      //const response: any = await fetch(
+      //"http://127.0.0.1:8080/api/auth/login",
+      //requestOptions
+      //);
+      //data.response = await response.json();
+      //data.error.status = false;
+      //} catch (e) {
+      //data.error.status = true;
+      //}
     }
   };
 
