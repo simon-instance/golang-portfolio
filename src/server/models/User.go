@@ -99,7 +99,7 @@ func (User) LoginRequest(u User) (User, error) {
 		log.Fatal(err.Error())
 	}
 
-	i := db.Collection("users").Where("username", "==", u.Username).Limit(1).Documents(context.Background())
+	i := db.Collection("users").Where("Username", "==", u.Username).Limit(1).Documents(context.Background())
 
 	for {
 		doc, err := i.Next()
@@ -118,14 +118,14 @@ func (User) LoginRequest(u User) (User, error) {
 			compareDBpass := string(DBpass)
 
 			if compareDBpass == comparePass {
-				user := &User{
+				user := User{
 					ID:       doc.Ref.ID,
 					Post:     Post,
 					Username: Username,
 					Password: pass,
 				}
 
-				return *user, nil
+				return user, nil
 			}
 
 			err = errors.New("Verkeerd wachtwoord ingevoerd")

@@ -53,23 +53,30 @@ const LoginForm: React.FC = () => {
     if (username !== null && password !== null) {
       const requestOptions = {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
-          username: "username",
-          password: "password",
+          Username: username,
+          Password: password,
         }),
       };
 
-      const response: any = await fetch(
-        "http://127.0.0.1:8080/api/auth/login",
-        requestOptions
-      );
-      const data: any = await response.json();
+      let data: { error: { status: boolean }; response: object | null } = {
+        error: {
+          status: false,
+        },
+        response: null,
+      };
 
-      console.log(await data);
+      try {
+        const response: any = await fetch(
+          "http://127.0.0.1:8080/api/auth/login",
+          requestOptions
+        );
+        data.response = await response.json();
+        data.error.status = false;
+      } catch (e) {
+        data.response = null;
+        data.error.status = true;
+      }
     }
   };
 

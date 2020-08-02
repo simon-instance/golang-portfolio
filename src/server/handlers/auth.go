@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -36,26 +38,35 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 // Login (POST) creates an account for the user and sets an encrypted cookie
 func Login(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+	log.SetPrefix("\n\n\n\n\n")
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("ERROR: %v", err.Error())
 	}
 
-	username := r.Form.Get("username")
-	password := []byte(r.Form.Get("password"))
+	var result map[string]interface{}
+	var u models.User
 
-	log.Println(username)
-
-	user := models.User{
-		Username: username,
-		Password: password,
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		log.Fatalf("ERROR 2: %v", err.Error())
 	}
 
-	user, uerr := models.User{}.LoginRequest(user)
-
-	if uerr != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
-	} else {
-		helpers.RespondWithJSON(w, http.StatusOK, user)
+	Username, UsernameExists := result["Username"]
+	Password, PasswordExists := result["Password"]
+	if UsernameExists && PasswordExists {
+		u = models.User{
+			Username: Username.(string),
+			Password: []byte(Password.(string)),
+		}
+		u, err = models.User{}.LoginRequest(u)
+		if err != nil {
+			log.Println(err.Error())
+			helpers.RespondWithError(w, http.StatusNotFound, "Gebruiker niet gevonden")
+		} else {
+			helpers.RespondWithJSON(w, http.StatusOK, u)
+		}
 	}
+
+	helpers.RespondWithError(w, http.StatusInternalServerError, "Something went wrong on our side")
 }
