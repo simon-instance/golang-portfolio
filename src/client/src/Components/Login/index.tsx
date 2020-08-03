@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { TryCatchHandler } from "../../Handlers";
+import {
+  TryCatchHandler,
+  TryCatchInterface,
+  TryCatchDataInterface,
+} from "../../Handlers";
 import {
   Flex,
   Box,
@@ -10,7 +14,9 @@ import {
   FormLabel,
   Input,
   Button,
+  useToast,
 } from "@chakra-ui/core";
+import { type } from "os";
 
 //
 // ThemeSelector: button to toggle dark mode
@@ -50,6 +56,9 @@ const LoginForm: React.FC = () => {
   const [username, setUsername] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
 
+  const TCHandler: TryCatchInterface = new TryCatchHandler();
+  const toast: any = useToast();
+
   const HandleSubmit: VoidFunction = async () => {
     if (username !== null && password !== null) {
       const requestOptions = {
@@ -60,20 +69,44 @@ const LoginForm: React.FC = () => {
         }),
       };
 
-      const Handler: TryCatchHandler = new TryCatchHandler();
-      let data: object = Handler.getData;
-      console.log(data);
+      let data: TryCatchDataInterface = TCHandler.Data;
+      let toastConfig: object = {
+        title: null,
+        description: null,
+      };
 
-      //try {
-      //const response: any = await fetch(
-      //"http://127.0.0.1:8080/api/auth/login",
-      //requestOptions
-      //);
-      //data.response = await response.json();
-      //data.error.status = false;
-      //} catch (e) {
-      //data.error.status = true;
-      //}
+      try {
+        const response: any = await fetch(
+          "http://127.0.0.1:8080/api/auth/login",
+          requestOptions
+        );
+
+        data.response.data = await response.json();
+        data.response.status = response.status;
+
+        TCHandler.handleData(data);
+
+        toastConfig = {
+          title: "Gelukt",
+          description: "Je bent nu ingelogd",
+        };
+      } catch (e) {
+        data.error.status = true;
+        data.error.message = e;
+        toastConfig = {
+          title: "Foutmelding",
+          description: e.message,
+        };
+      } finally {
+        TCHandler.Data = data;
+        toast({
+          position: "top-left",
+          status: data.error.status === true ? "error" : "success",
+          duration: 7000,
+          ...toastConfig,
+          isClosable: true,
+        });
+      }
     }
   };
 

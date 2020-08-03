@@ -13,26 +13,34 @@ import (
 // Register (POST) creates an account for the user and sets an encrypted cookie
 func Register(w http.ResponseWriter, r *http.Request) {
 	log.SetPrefix("[auth.Register] :: ")
-	err := r.ParseForm()
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("ERROR: %v", err.Error())
 	}
 
-	username := r.Form.Get("username")
-	password := []byte(r.Form.Get("password"))
+	var result map[string]interface{}
+	var u models.User
 
-	user := models.User{
-		Username: username,
-		Password: password,
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		log.Fatalf("ERROR 2: %v", err.Error())
 	}
 
-	user, uerr := models.User{}.Create(user)
-
-	if uerr != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, uerr.Error())
-	} else {
-
-		helpers.RespondWithJSON(w, http.StatusOK, user)
+	Username, UsernameExists := result["Username"]
+	Password, PasswordExists := result["Password"]
+	if UsernameExists && PasswordExists {
+		u = models.User{
+			Username: Username.(string),
+			Password: []byte(Password.(string)),
+		}
+		u, err := models.User{}.Create(u)
+		if err != nil {
+			log.Println(err.Error())
+			helpers.RespondWithError(w, http.StatusNotFound, "Er ging iets mis met het maken van je account")
+		} else {
+			// TODO: set refresh_token + access_token
+			helpers.RespondWithJSON(w, http.StatusOK, u)
+		}
 	}
 }
 
@@ -61,12 +69,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		u, err = models.User{}.LoginRequest(u)
 		if err != nil {
-			log.Println(err.Error())
-			helpers.RespondWithError(w, http.StatusNotFound, "Gebruiker niet gevonden")
+			helpers.RespondWithError(w, http.StatusNotFound, err.Error())
 		} else {
 			helpers.RespondWithJSON(w, http.StatusOK, u)
 		}
+		return
 	}
 
-	helpers.RespondWithError(w, http.StatusInternalServerError, "Something went wrong on our side")
+	helpers.RespondWithError(w, http.StatusInternalServerError, "Iets ging er verkeerd bij ons")
 }

@@ -24,18 +24,6 @@ func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 // RespondWithError sends back json response as an error
-func RespondWithError(w http.ResponseWriter, code int, msg string) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		response, err := json.Marshal(map[string]string{"message": msg})
-		if err != nil {
-			log.Fatalf("marshalError: %v", err.Error())
-		}
-
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(code)
-		_, err = w.Write(response)
-		if err != nil {
-			log.Fatalf("Error => %v", err)
-		}
-	})
+func RespondWithError(w http.ResponseWriter, code int, msg string) {
+	RespondWithJSON(w, code, map[string]string{"message": msg})
 }

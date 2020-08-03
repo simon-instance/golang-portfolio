@@ -1,24 +1,48 @@
-interface Data {
+interface User {
+  id: string;
+  username: string;
+  Post?: {
+    title: string;
+    content: string;
+  };
+}
+
+interface Response {
+  data:
+    | {
+        message?: string;
+        User?: User;
+      }
+    | undefined;
+  message: string | undefined;
+  status: number | undefined;
+}
+
+export interface DataInterface {
   error: {
     status: boolean;
+    message: string | undefined;
   };
-  response: object | null;
+  response: Response;
 }
 
-class TryCatchHandler {
-  private static data: Data;
+export interface Interface {
+  Data: DataInterface;
 
-  constructor() {
-    TryCatchHandler.data = { error: { status: true }, response: null };
-  }
-
-  get getData(): Data {
-    return this.data;
-  }
-
-  set setData(data: Data) {
-    TryCatchHandler.data = data;
-  }
+  handleData(data: DataInterface): void;
 }
 
-export default TryCatchHandler;
+export class Handler implements Interface {
+  public Data: DataInterface = {
+    error: { status: false, message: undefined },
+    response: {
+      data: undefined,
+      message: undefined,
+      status: undefined,
+    },
+  };
+
+  public handleData(data: DataInterface): void {
+    console.log(data);
+  }
+}
