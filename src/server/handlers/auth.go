@@ -67,11 +67,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			Username: Username.(string),
 			Password: []byte(Password.(string)),
 		}
-		u, err = models.User{}.LoginRequest(u)
+		u, status, err := models.User{}.LoginRequest(u)
 		if err != nil {
-			helpers.RespondWithError(w, http.StatusNotFound, err.Error())
+			helpers.RespondWithError(w, status, err.Error())
 		} else {
-			helpers.RespondWithJSON(w, http.StatusOK, u)
+			helpers.RespondWithJSON(w, status, u)
 		}
 		return
 	}

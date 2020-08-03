@@ -84,7 +84,8 @@ const LoginForm: React.FC = () => {
         data.response.data = await response.json();
         data.response.status = response.status;
 
-        TCHandler.handleData(data);
+        const error: Error | void = TCHandler.handleData(data);
+        if (typeof error !== "undefined") throw error;
 
         toastConfig = {
           title: "Gelukt",
@@ -98,6 +99,7 @@ const LoginForm: React.FC = () => {
           description: e.message,
         };
       } finally {
+        console.log(data.error.status);
         TCHandler.Data = data;
         toast({
           position: "top-left",

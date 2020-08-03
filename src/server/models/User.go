@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"net/http"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/scrummer123/golang-portfolio/src/server/database"
@@ -91,13 +92,8 @@ func (User) Create(u User) (User, error) {
 
 // LoginRequest checks in the database if the user has the right data to log in with
 // returns error if the user doesn't have the rights to log in
-func (User) LoginRequest(u User) (User, error) {
+func (User) LoginRequest(u User) (User, int, error) {
 	db := database.GetFirestoreClient()
-
-	pass, err := bcrypt.GenerateFromPassword(u.Password, bcrypt.DefaultCost)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
 
 	i := db.Collection("users").Where("Username", "==", u.Username).Limit(1).Documents(context.Background())
 
@@ -110,29 +106,25 @@ func (User) LoginRequest(u User) (User, error) {
 
 		data := doc.Data()
 		DBpass, DBpassExists := data["Password"].([]byte)
-		Post, PostExists := data["Post"].(*UserPost)
 		Username, UsernameExists := data["Username"].(string)
 
-		if DBpassExists && PostExists && UsernameExists {
-			comparePass := string(pass)
-			compareDBpass := string(DBpass)
+		if DBpassExists && UsernameExists {
+			err := bcrypt.CompareHashAndPassword(DBpass, u.Password)
 
-			if compareDBpass == comparePass {
-				user := User{
-					ID:       doc.Ref.ID,
-					Post:     Post,
-					Username: Username,
-					Password: pass,
-				}
-
-				return user, nil
+			if err != nil {
+				err = errors.New("Verkeerd wachtwoord ingevoerd")
+				return User{}, http.StatusUnauthorized, err
 			}
 
-			err = errors.New("Verkeerd wachtwoord ingevoerd")
-			return User{}, err
+			user := User{
+				ID:       doc.Ref.ID,
+				Username: Username,
+				Password: DBpass,
+			}
+
+			return user, http.StatusOK, err
 		}
 	}
-	err = errors.New("Gebruiker niet gevonden")
-
-	return User{}, err
+	err := errors.New("Gebruiker niet gevonden")
+	return User{}, http.StatusNotFound, err
 }
