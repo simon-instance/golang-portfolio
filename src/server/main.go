@@ -22,7 +22,7 @@ func main() {
 	// Chi stuff
 	r := chi.NewRouter()
 	r.Mount("/api", apiRoutes(r))
-	r.Mount("/app", frontEndRoutes(r))
+	r.Mount("/login", frontEndRoutes(r))
 	// End chi stuff
 
 	// Fire stuff

@@ -3,14 +3,9 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-// Pages
-import { Login } from "./Components";
-
 ReactDOM.render(
   <React.StrictMode>
-    <App>
-      <Login />
-    </App>
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
