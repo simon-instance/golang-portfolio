@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
 	"github.com/scrummer123/golang-portfolio/src/server/database"
 	"golang.org/x/crypto/bcrypt"
@@ -77,7 +78,9 @@ func (u User) Create() (User, error) {
 	u.Password = pass
 
 	doc := db.Collection("users").NewDoc()
-	_, docErr := doc.Set(context.Background(), u)
+	mappedU := structs.Map(u)
+	delete(mappedU, "ID")
+	_, docErr := doc.Set(context.Background(), mappedU)
 
 	if docErr != nil {
 		log.Fatalf("%v", err)

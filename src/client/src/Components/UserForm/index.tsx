@@ -154,7 +154,7 @@ const LoginForm: React.FC<{ type: string }> = ({ type }) => {
 const UserForm: React.FC<{ type: string }> = ({ type }) => {
   return (
     <Flex minHeight="100vh" width="full" align="center" justify="center">
-      <Box borderRadius={1} borderWidth={1} px={8} mx={4}>
+      <Box borderWidth={1} px={8} mx={4}>
         <ThemeSelector />
         <Box>
           <LoginHeader type={type} /> <LoginForm type={type} />
