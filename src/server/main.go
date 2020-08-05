@@ -23,6 +23,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Mount("/api", apiRoutes(r))
 	r.Mount("/login", frontEndRoutes(r))
+	r.Mount("/register", frontEndRoutes(r))
 	// End chi stuff
 
 	// Fire stuff
@@ -57,7 +58,7 @@ func apiRoutes(r chi.Router) chi.Router {
 func authRoutes() chi.Router {
 	r := chi.NewRouter()
 
-	r.Post("/new", handlers.Register)
+	r.Post("/register", handlers.Register)
 	r.Post("/login", handlers.Login)
 
 	return r

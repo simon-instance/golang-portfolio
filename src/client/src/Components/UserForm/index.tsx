@@ -16,7 +16,6 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/core";
-import { type } from "os";
 
 //
 // ThemeSelector: button to toggle dark mode
@@ -40,10 +39,12 @@ const ThemeSelector: React.FC = () => {
 // LoginHeader: text to inform user about what to do
 //
 
-const LoginHeader: React.FC = () => {
+const LoginHeader: React.FC<{ type: string }> = ({ type }) => {
   return (
     <Box>
-      <Heading as="h3">Log in met uw gegevens</Heading>
+      <Heading as="h3">
+        {type === "login" ? "Log in" : "Registreer"} met uw gegevens
+      </Heading>
     </Box>
   );
 };
@@ -52,7 +53,7 @@ const LoginHeader: React.FC = () => {
 // LoginForm: fields to let the user login
 //
 
-const LoginForm: React.FC = () => {
+const LoginForm: React.FC<{ type: string }> = ({ type }) => {
   const [username, setUsername] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
 
@@ -77,7 +78,9 @@ const LoginForm: React.FC = () => {
 
       try {
         const response: any = await fetch(
-          "http://127.0.0.1:8080/api/auth/login",
+          `http://127.0.0.1:8080/api/auth/${
+            type === "login" ? type : "register"
+          }`,
           requestOptions
         );
 
@@ -89,7 +92,9 @@ const LoginForm: React.FC = () => {
 
         toastConfig = {
           title: "Gelukt",
-          description: "Je bent nu ingelogd",
+          description: `Je bent nu ${
+            type === "login" ? "ingelogd" : "geregistreed"
+          }`,
         };
       } catch (e) {
         data.error.status = true;
@@ -146,18 +151,17 @@ const LoginForm: React.FC = () => {
 // Login: main component
 //
 
-const Login: React.FC = () => {
+const UserForm: React.FC<{ type: string }> = ({ type }) => {
   return (
     <Flex minHeight="100vh" width="full" align="center" justify="center">
-      <Box borderRadius={4} borderWidth={1} px={8}>
+      <Box borderRadius={1} borderWidth={1} px={8} mx={4}>
         <ThemeSelector />
         <Box>
-          <LoginHeader />
-          <LoginForm />
+          <LoginHeader type={type} /> <LoginForm type={type} />
         </Box>
       </Box>
     </Flex>
   );
 };
 
-export default Login;
+export default UserForm;

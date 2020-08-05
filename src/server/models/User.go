@@ -67,7 +67,7 @@ func (User) GetByID(UserID string) (User, bool) {
 
 // Create makes a new document in the database
 // return true if successful, false if not successful
-func (User) Create(u User) (User, error) {
+func (u User) Create() (User, error) {
 	db := database.GetFirestoreClient()
 
 	pass, err := bcrypt.GenerateFromPassword(u.Password, bcrypt.DefaultCost)
@@ -92,7 +92,7 @@ func (User) Create(u User) (User, error) {
 
 // LoginRequest checks in the database if the user has the right data to log in with
 // returns error if the user doesn't have the rights to log in
-func (User) LoginRequest(u User) (User, int, error) {
+func (u User) LoginRequest() (User, int, error) {
 	db := database.GetFirestoreClient()
 
 	i := db.Collection("users").Where("Username", "==", u.Username).Limit(1).Documents(context.Background())

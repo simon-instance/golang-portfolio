@@ -33,15 +33,24 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			Username: Username.(string),
 			Password: []byte(Password.(string)),
 		}
-		u, err := models.User{}.Create(u)
+		DBu, err := u.Create()
 		if err != nil {
-			log.Println(err.Error())
 			helpers.RespondWithError(w, http.StatusNotFound, "Er ging iets mis met het maken van je account")
 		} else {
-			// TODO: set refresh_token + access_token
-			helpers.RespondWithJSON(w, http.StatusOK, u)
+			u, status, err := u.LoginRequest()
+			if err != nil {
+				helpers.RespondWithError(w, status, err.Error())
+			} else {
+				helpers.SetAccessToken("standard", w)
+				helpers.SetRefreshToken(u.ID, w)
+				helpers.RespondWithJSON(w, status, DBu)
+			}
 		}
+
+		return
 	}
+
+	helpers.RespondWithError(w, http.StatusUnauthorized, "Wachtwoord en/of gebruikersnaam veld(en) leeg")
 }
 
 // Login (POST) creates an account for the user and sets an encrypted cookie
@@ -67,14 +76,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			Username: Username.(string),
 			Password: []byte(Password.(string)),
 		}
-		u, status, err := models.User{}.LoginRequest(u)
+		u, status, err := u.LoginRequest()
 		if err != nil {
 			helpers.RespondWithError(w, status, err.Error())
 		} else {
+			helpers.SetAccessToken("standard", w)
+			helpers.SetRefreshToken(u.ID, w)
 			helpers.RespondWithJSON(w, status, u)
 		}
 		return
 	}
 
-	helpers.RespondWithError(w, http.StatusInternalServerError, "Iets ging er verkeerd bij ons")
+	helpers.RespondWithError(w, http.StatusUnauthorized, "Wachtwoord en/of gebruikersnaam veld(en) leeg")
 }

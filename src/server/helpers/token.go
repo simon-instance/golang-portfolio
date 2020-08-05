@@ -6,15 +6,14 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/scrummer123/golang-portfolio/src/server/models"
 	"github.com/scrummer123/golang-portfolio/src/server/token"
 )
 
 // SetRefreshToken sets a token with the userID
-func SetRefreshToken(u models.User, w http.ResponseWriter) {
+func SetRefreshToken(UserID string, w http.ResponseWriter) {
 	log.SetPrefix("[token.SetRefreshToken] :: ")
 	refreshTokenClaims := jwt.MapClaims{
-		"UserID": u.ID,
+		"UserID": UserID,
 	}
 
 	refreshTokenEncoded, err := token.MakeTokenData(refreshTokenClaims)
@@ -33,11 +32,11 @@ func SetRefreshToken(u models.User, w http.ResponseWriter) {
 }
 
 // SetAccessToken sets a token with the access rights for each url protected with middleware
-func SetAccessToken(userType string, w http.ResponseWriter) {
+func SetAccessToken(userType string, w http.ResponseWriter) *http.Cookie {
 	log.SetPrefix("[token.SetAccessToken] :: ")
 	if userType == "standard" {
 		accessTokenClaims := jwt.MapClaims{
-			"/api/users/{id}/find": false,
+			"/api/users/{id}/find": true,
 		}
 
 		accessTokenEncoded, err := token.MakeTokenData(accessTokenClaims)
@@ -54,5 +53,7 @@ func SetAccessToken(userType string, w http.ResponseWriter) {
 		}
 
 		http.SetCookie(w, accessTokenCookie)
+		return accessTokenCookie
 	}
+	return nil
 }
