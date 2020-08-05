@@ -37,7 +37,7 @@ const Header: React.FC<{ setNavHeight: Function }> = ({ setNavHeight }) => {
   //
   // render variables
   //
-
+  // [xs, sm, md, (lg)]...
   const sideFlex = [0, 1, 2];
   const mainFlex = [1, 3, 4];
 
