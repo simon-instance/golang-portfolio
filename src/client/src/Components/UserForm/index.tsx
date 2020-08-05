@@ -7,8 +7,6 @@ import {
 import {
   Flex,
   Box,
-  IconButton,
-  useColorMode,
   Heading,
   FormControl,
   FormLabel,
@@ -16,24 +14,6 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/core";
-
-//
-// ThemeSelector: button to toggle dark mode
-//
-
-const ThemeSelector: React.FC = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  return (
-    <Box textAlign="right" mt={8} mb={4}>
-      <IconButton
-        aria-label="ToggleDarkMode"
-        icon={colorMode === "light" ? "moon" : "sun"}
-        onClick={toggleColorMode}
-      />
-    </Box>
-  );
-};
 
 //
 // LoginHeader: text to inform user about what to do
@@ -118,7 +98,7 @@ const LoginForm: React.FC<{ type: string }> = ({ type }) => {
   };
 
   return (
-    <Box my={8}>
+    <Box mt="8">
       <FormControl>
         <FormLabel my={1}>Gebruikersnaam</FormLabel>
         <Input
@@ -166,8 +146,7 @@ const UserForm: React.FC<{ type: string; height: number }> = ({
 
   return (
     <Flex height={formHeight} width="full" align="center" justify="center">
-      <Box borderWidth={1} px={8} mx={4}>
-        <ThemeSelector />
+      <Box borderWidth={1} px="8" py="12" mx={4}>
         <Box>
           <LoginHeader type={type} /> <LoginForm type={type} />
         </Box>
