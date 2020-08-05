@@ -1,3 +1,4 @@
 import UserForm from "./UserForm";
+import Header from "./Header";
 
-export { UserForm };
+export { UserForm, Header };

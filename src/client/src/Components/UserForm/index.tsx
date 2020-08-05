@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TryCatchHandler,
   TryCatchInterface,
@@ -151,9 +151,21 @@ const LoginForm: React.FC<{ type: string }> = ({ type }) => {
 // Login: main component
 //
 
-const UserForm: React.FC<{ type: string }> = ({ type }) => {
+const UserForm: React.FC<{ type: string; height: number }> = ({
+  type,
+  height,
+}) => {
+  const [formHeight, setFormHeight] = useState<string>("50vh");
+
+  useEffect(() => {
+    if (height !== 0) {
+      const calculatedHeight = `calc(100vh - ${height + "px"})`;
+      setFormHeight(calculatedHeight);
+    }
+  }, [height]);
+
   return (
-    <Flex minHeight="100vh" width="full" align="center" justify="center">
+    <Flex height={formHeight} width="full" align="center" justify="center">
       <Box borderWidth={1} px={8} mx={4}>
         <ThemeSelector />
         <Box>
