@@ -131,22 +131,9 @@ const LoginForm: React.FC<{ type: string }> = ({ type }) => {
 // Login: main component
 //
 
-const UserForm: React.FC<{ type: string; height: number }> = ({
-  type,
-  height,
-}) => {
-  const [formHeight, setFormHeight] = useState<string>("50vh");
-
-  useEffect(() => {
-    if (height !== 0) {
-      // +1 = border of nav
-      const calculatedHeight = `calc(100vh - ${height + 1 + "px"})`;
-      setFormHeight(calculatedHeight);
-    }
-  }, [height]);
-
+const UserForm: React.FC<{ type: string }> = ({ type }) => {
   return (
-    <Flex height={formHeight} width="full" align="center" justify="center">
+    <Flex height="200vh" width="full" align="center" justify="center">
       <Box borderWidth={1} px="8" py="12" mx={4}>
         <Box>
           <LoginHeader type={type} /> <LoginForm type={type} />

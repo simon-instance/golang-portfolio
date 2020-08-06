@@ -8,21 +8,19 @@ import { UserForm, Header } from "./Components";
 import { ColorModeProvider as MyColorModeProvider } from "./Providers/ColorModeProvider";
 
 const App: React.FC = () => {
-  const [navHeight, setNavHeight] = useState<number>(0);
-
   return (
     <ThemeProvider>
       <ColorModeProvider>
         <CSSReset />
         <Router>
           <MyColorModeProvider>
-            <Header setNavHeight={setNavHeight} />
+            <Header />
             <Switch>
               <Route exact path="/login">
-                <UserForm type="login" height={navHeight} />
+                <UserForm type="login" />
               </Route>
               <Route exact path="/register">
-                <UserForm type="register" height={navHeight} />
+                <UserForm type="register" />
               </Route>
             </Switch>
           </MyColorModeProvider>
