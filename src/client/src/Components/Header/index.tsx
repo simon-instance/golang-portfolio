@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useContext } from "react";
 
 import { ColorMode } from "../../Providers/ColorModeProvider";
 
-import { Box, Button, IconButton } from "@chakra-ui/core";
+import { Link as CLink, Box, Button, IconButton } from "@chakra-ui/core";
 import { Link } from "react-router-dom";
+import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 
 //
 // ThemeSelector: button to toggle dark mode
@@ -23,16 +24,51 @@ const ThemeSelector: React.FC = () => {
   );
 };
 
-const Nav: React.FC = () => (
-  <div>
-    <Link to="/register">
-      <Button>Register</Button>
-    </Link>
-    <Link to="/login">
-      <Button>Login</Button>
-    </Link>
-  </div>
-);
+const SocialMediaButtons: React.FC = () => {
+  const links = [
+    {
+      href: "https://github.com/scrummer123",
+      icon: AiFillGithub,
+    },
+    {
+      href: "https://www.linkedin.com/in/simon-peters-0834151a1",
+      icon: AiFillLinkedin,
+    },
+  ];
+
+  return (
+    <div>
+      {links.map(({ href, icon }) => (
+        <CLink href={href} isExternal>
+          <IconButton aria-label="My Github profile" icon={icon} />
+        </CLink>
+      ))}
+    </div>
+  );
+};
+
+const Nav: React.FC = () => {
+  const links = [
+    {
+      to: "/register",
+      text: "Registreren",
+    },
+    {
+      to: "login",
+      text: "Inloggen",
+    },
+  ];
+
+  return (
+    <div>
+      {links.map(({ to, text }) => (
+        <Link to={to}>
+          <Button ml="3">{text}</Button>
+        </Link>
+      ))}
+    </div>
+  );
+};
 
 const Header: React.FC<{ setNavHeight: Function }> = ({ setNavHeight }) => {
   const headerWrapper = useRef<HTMLDivElement>(null);
