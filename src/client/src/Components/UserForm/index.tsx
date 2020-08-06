@@ -133,9 +133,21 @@ const LoginForm: React.FC<{ type: string }> = ({ type }) => {
 
 const UserForm: React.FC<{ type: string }> = ({ type }) => {
   return (
-    <Flex height="200vh" width="full" align="center" justify="center">
-      <Box borderWidth={1} px="8" py="12" mx={4}>
-        <Box>
+    <Flex
+      height="100vh"
+      width="full"
+      direction="column"
+      align="center"
+      justify="center"
+    >
+      <Box flex="1" />
+      <Box
+        flex={[3, 4, 7]}
+        d="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Box borderWidth={1} px="8" py="12" mx={4}>
           <LoginHeader type={type} /> <LoginForm type={type} />
         </Box>
       </Box>

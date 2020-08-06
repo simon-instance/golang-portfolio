@@ -122,6 +122,8 @@ const Header: React.FC = () => {
   const mainFlex = [1, 32, 15, 7];
 
   const currentColor = colorMode === "light" ? "gray.200" : "gray.700";
+  const currentNavBg =
+    colorMode === "light" ? "rgba(255,255,255,.8)" : "rgba(26,32,44, .8)";
 
   const ButtonContainer: React.ReactNode = (
     <Box d="flex" w={["100%", "auto"]} justifyContent="space-between">
@@ -139,7 +141,7 @@ const Header: React.FC = () => {
         borderBottom="1px"
         borderColor={currentColor}
         className={"filter"}
-        bg="rgba(255,255,255, .8)"
+        bg={currentNavBg}
         style={{ backdropFilter: "blur(8px)" }}
       >
         <Box flex={sideFlex} />
