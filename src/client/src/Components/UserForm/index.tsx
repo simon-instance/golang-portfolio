@@ -139,7 +139,8 @@ const UserForm: React.FC<{ type: string; height: number }> = ({
 
   useEffect(() => {
     if (height !== 0) {
-      const calculatedHeight = `calc(100vh - ${height + "px"})`;
+      // +1 = border of nav
+      const calculatedHeight = `calc(100vh - ${height + 1 + "px"})`;
       setFormHeight(calculatedHeight);
     }
   }, [height]);
