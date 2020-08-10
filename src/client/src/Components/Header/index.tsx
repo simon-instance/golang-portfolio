@@ -124,8 +124,7 @@ const Header: React.FC = () => {
   const mainFlex = [1, 32, 15, 7];
 
   const currentColor = colorMode === "light" ? "gray.200" : "gray.700";
-  const currentNavBg =
-    colorMode === "light" ? "rgba(255,255,255,.8)" : "rgba(26,32,44, .8)";
+  const currentNavClass = colorMode === "light" ? "nav-light" : "nav-dark";
 
   const ButtonContainer: React.ReactNode = (
     <Box d="flex" w={["100%", "auto"]} justifyContent="space-between">
@@ -135,37 +134,16 @@ const Header: React.FC = () => {
   );
 
   return (
-    <Box w="100%" position="fixed">
-      <Box
-        d="flex"
-        transition=".25s ease all"
-        py={py + 2}
-        borderBottom="1px"
-        borderColor={currentColor}
-        className={"filter"}
-        bg={currentNavBg}
-        style={{ backdropFilter: "blur(8px)" }}
-      >
+    <Box w="100%" position="fixed" id="header-root">
+      <Box d="flex" py={py + 2} className={"nav-default " + currentNavClass}>
         <Box flex={sideFlex} />
-        <Box
-          d="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mx="5"
-          flex={mainFlex}
-        >
+        <Box id="button-container-box" mx="5" flex={mainFlex}>
           {ButtonContainer}
           <Nav first={true} />
         </Box>
         <Box flex={sideFlex} />
       </Box>
-      <Box
-        transition=".25s ease all"
-        shadow="md"
-        d="flex"
-        py={py}
-        bg={currentColor}
-      >
+      <Box shadow="md" d="flex" py={py} bg={currentColor}>
         <Box flex={sideFlex} />
         <Box flex={mainFlex}>
           <Nav first={false} />
