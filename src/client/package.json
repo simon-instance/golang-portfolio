@@ -11,20 +11,22 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "@types/jest": "^24.9.1",
-    "@types/node": "^12.12.53",
-    "@types/react": "^16.9.43",
+    "@types/lodash": "^4.14.159",
+    "@types/node": "^12.12.54",
+    "@types/react": "^16.9.45",
     "@types/react-dom": "^16.9.8",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
     "emotion-theming": "^10.0.27",
+    "lodash": "^4.17.19",
     "nodemon": "^2.0.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.7.5"
+    "ts-loader": "^8.0.2",
+    "ts-node": "^8.10.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,7 +36,10 @@
     "eject": "react-scripts eject",
     "watch": "npm-watch",
     "nm:watch": "nodemon -e ts,tsx -w ./ --ignore 'src/**/*.spec.ts' -x 'npm run build'",
-    "test-watch": "nodemon  -x npm run test"
+    "test-watch": "nodemon  -x npm run test",
+    "webpack-dev-server": "webpack-dev-server",
+    "dev": "webpack-dev-server --mode=development",
+    "prod": "webpack --mode=production"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -55,7 +60,10 @@
     "build": "src/*.tsx"
   },
   "devDependencies": {
-    "npm-watch": "^0.6.0"
-  },
-  "type": "module"
+    "awesome-typescript-loader": "^5.2.1",
+    "npm-watch": "^0.6.0",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
 }
