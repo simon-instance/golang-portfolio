@@ -1,9 +1,12 @@
 #header-root {
-  & * {
-    transition: .25s ease all;
-  }
+  /*
+   *& * {
+   *  transition: .25s ease all;
+   *}
+   */
 
   .nav-default {
+    transition: .25s ease all;
     backdrop-filter: blur(8px);
   }
 

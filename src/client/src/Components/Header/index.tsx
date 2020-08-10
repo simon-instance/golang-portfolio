@@ -143,7 +143,13 @@ const Header: React.FC = () => {
         </Box>
         <Box flex={sideFlex} />
       </Box>
-      <Box shadow="md" d="flex" py={py} bg={currentColor}>
+      <Box
+        className="nav-default"
+        shadow="md"
+        d="flex"
+        py={py}
+        bg={currentColor}
+      >
         <Box flex={sideFlex} />
         <Box flex={mainFlex}>
           <Nav first={false} />
