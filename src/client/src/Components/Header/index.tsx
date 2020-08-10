@@ -6,6 +6,8 @@ import { Link as CLink, Box, Button, IconButton } from "@chakra-ui/core";
 import { Link } from "react-router-dom";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 
+import "./index.scss";
+
 const ThemeSelector: React.FC = () => {
   const [colorMode, toggleColorMode] = useContext(ColorMode);
 
@@ -36,8 +38,8 @@ const SocialMediaButtons: React.FC = () => {
 
   return (
     <div>
-      {links.map(({ href, icon, label }) => (
-        <CLink href={href} isExternal ml="3">
+      {links.map(({ href, icon, label }, i) => (
+        <CLink key={i} href={href} isExternal ml="3">
           <IconButton variant="ghost" aria-label={label} icon={icon} />
         </CLink>
       ))}
@@ -67,7 +69,7 @@ const Nav: React.FC<{ first: boolean }> = ({ first }) => {
   return (
     <Box d="flex">
       {links.map(({ to, text }, i) => (
-        <Link to={to}>
+        <Link key={i} to={to}>
           <Button
             d={i < 2 ? d : first === true ? "none" : "block"}
             variant={variant}

@@ -34,11 +34,8 @@
     "build:dev": "NODE_ENV=dev npm run build --dev --configuration=dev && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "watch": "npm-watch",
     "nm:watch": "nodemon -e ts,tsx -w ./ --ignore 'src/**/*.spec.ts' -x 'npm run build'",
-    "test-watch": "nodemon  -x npm run test",
-    "webpack-dev-server": "webpack-dev-server",
-    "dev": "webpack-dev-server --mode=development",
+    "dev": "webpack-dev-server --mode=development --inline",
     "prod": "webpack --mode=production"
   },
   "eslintConfig": {
@@ -62,6 +59,9 @@
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",
     "npm-watch": "^0.6.0",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.3",
+    "source-map-loader": "^1.0.1",
     "typescript": "^3.9.7",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
