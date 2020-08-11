@@ -12,7 +12,6 @@
     "@types/react-router-dom": "^5.1.5",
     "css-loader": "^4.2.1",
     "emotion-theming": "^10.0.27",
-    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
@@ -22,15 +21,19 @@
   },
   "devDependencies": {
     "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.10.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
+    "terser-webpack-plugin": "^4.1.0",
     "ts-loader": "^8.0.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "watch": "webpack-dev-server src/app/index.tsx src/build/bundle.js"
+    "watch": "webpack-dev-server --progress --hide-modules",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
