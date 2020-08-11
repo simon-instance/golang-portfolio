@@ -14,6 +14,7 @@ module.exports = {
         enforce: "pre",
         test: /\.js$/,
         loader: "source-map-loader",
+        exclude: /node_modules/,
       },
       {
         test: /\.s[ac]ss$/i,
@@ -25,6 +26,7 @@ module.exports = {
           // Compiles Sass to CSS
           "sass-loader",
         ],
+        exclude: /node_modules/,
       },
     ],
   },

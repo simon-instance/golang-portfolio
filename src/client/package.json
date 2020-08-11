@@ -17,6 +17,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
+    "TagCloud": "^2.1.0",
     "emotion-theming": "^10.0.27",
     "lodash": "^4.17.19",
     "nodemon": "^2.0.4",
