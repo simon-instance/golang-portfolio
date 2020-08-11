@@ -1,24 +1,15 @@
 {
   "compilerOptions": {
-    "outDir": "./build/",
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react",
+    "outDir": "./src/build/",
     "noImplicitAny": true,
-    "preserveConstEnums": true,
-    "removeComments": true,
-    "sourceMap": true
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "removeComments": true
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/**/*"]
 }

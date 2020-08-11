@@ -1,19 +1,15 @@
 const path = require("path");
+const hwp = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.tsx",
+  mode: "development",
+  entry: "./src/app/index.tsx",
   devtool: "inline-source-map",
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: "awesome-typescript-loader",
-        exclude: /node_modules/,
-      },
-      {
-        enforce: "pre",
-        test: /\.js$/,
-        loader: "source-map-loader",
+        test: /\.(tsx|ts)?$/,
+        use: "ts-loader",
         exclude: /node_modules/,
       },
       {
@@ -26,7 +22,6 @@ module.exports = {
           // Compiles Sass to CSS
           "sass-loader",
         ],
-        exclude: /node_modules/,
       },
     ],
   },
@@ -35,6 +30,11 @@ module.exports = {
   },
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "src/build"),
+    path: path.resolve(__dirname, "src", "build"),
   },
+  plugins: [
+    new hwp({
+      template: path.resolve(__dirname, "src", "app", "static", "index.html"),
+    }),
+  ],
 };

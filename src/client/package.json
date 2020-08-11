@@ -1,70 +1,38 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
+  "name": "better-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
   "dependencies": {
     "@chakra-ui/core": "^0.8.0",
-    "@chakra-ui/icons": "^1.0.0-next.3",
-    "@emotion/core": "^10.0.28",
+    "@emotion/core": "^10.0.34",
     "@emotion/styled": "^10.0.27",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "@types/jest": "^24.9.1",
-    "@types/lodash": "^4.14.159",
-    "@types/node": "^12.12.54",
-    "@types/react": "^16.9.45",
+    "@types/react": "^16.9.46",
     "@types/react-dom": "^16.9.8",
-    "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
-    "TagCloud": "^2.1.0",
+    "css-loader": "^4.2.1",
     "emotion-theming": "^10.0.27",
-    "lodash": "^4.17.19",
-    "nodemon": "^2.0.4",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
-    "ts-loader": "^8.0.2",
-    "ts-node": "^8.10.2"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "build:dev": "NODE_ENV=dev npm run build --dev --configuration=dev && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "nm:watch": "nodemon -e ts,tsx -w ./ --ignore 'src/**/*.spec.ts' -x 'npm run build'",
-    "dev": "webpack-dev-server --mode=development --inline",
-    "prod": "webpack --mode=production"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "watch": {
-    "build": "src/*.tsx"
+    "style-loader": "^1.2.1",
+    "typescript": "^3.9.7"
   },
   "devDependencies": {
-    "awesome-typescript-loader": "^5.2.1",
-    "npm-watch": "^0.6.0",
+    "html-webpack-plugin": "^4.3.0",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
-    "source-map-loader": "^1.0.1",
-    "typescript": "^3.9.7",
+    "ts-loader": "^8.0.2",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
-  }
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "scripts": {
+    "watch": "webpack-dev-server src/app/index.tsx src/build/bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

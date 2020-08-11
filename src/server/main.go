@@ -41,7 +41,7 @@ func main() {
 
 func frontEndRoutes(r chi.Router) chi.Router {
 	workDir, _ := os.Getwd()
-	filesDir := http.Dir(filepath.Join(workDir, "../client/build"))
+	filesDir := http.Dir(filepath.Join(workDir, "../client/src/build"))
 	fileServer(r, "/", filesDir)
 
 	return r

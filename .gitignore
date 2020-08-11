@@ -2,9 +2,8 @@
 pkg/
 bin/
 src/server/token/bytes.txt
-src/client/node_modules/
-src/client/build/
-src/client/public/
-src/better-client/node_modules
+src/client-bu
+src/client/node_modules
+src/client/src/build
 src/server/database/simons-portfolio-2add992d213c.json
 .main.go.swp
