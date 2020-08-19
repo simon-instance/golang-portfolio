@@ -53,7 +53,7 @@ module.exports = {
     },
     output: {
         filename: isDev ? "[name].bundle.js" : "[name].[hash].bundle.js",
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve(__dirname, "src", "build"),
     },
     plugins: [new hwp({ template: "./src/app/static/index.html" })],
 };
