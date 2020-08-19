@@ -1,74 +1,59 @@
 const path = require("path");
+
 const hwp = require("html-webpack-plugin");
-const terser = require("terser-webpack-plugin");
-const extracter = require("mini-css-extract-plugin");
-const cssminifier = require("optimize-css-assets-webpack-plugin");
 
-const isDev = process.env.NODE_ENV === "dev";
-
-const _module = {
-  rules: [
-    {
-      test: /\.(tsx|ts)?$/,
-      use: "ts-loader",
-      exclude: /node_modules/,
-    },
-    {
-      test: /\.scss$/,
-      use: [
-        // Creates `style` nodes from JS strings
-        isDev ? "style-loader" : extracter.loader,
-        // Translates CSS into CommonJS
-        {
-          loader: "css-loader",
-          options: {
-            sourceMap: isDev,
-          },
-        },
-        // Compile sass to css
-        {
-          loader: "sass-loader",
-          options: {
-            sourceMap: isDev,
-          },
-        },
-      ],
-    },
-  ],
-};
-
-const optimization = {
-  minimize: true,
-  minimizer: [
-    new terser({
-      extractComments: true,
-    }),
-    new cssminifier({
-      filename: isDev ? "[name].css" : "[name].[hash].css",
-      chunkFilename: isDev ? "[id].css" : "[id].[hash].css",
-    }),
-  ],
-};
-
-const plugins = [
-  new hwp({
-    template: path.resolve(__dirname, "src", "app", "static", "index.html"),
-  }),
-  new extracter({ filename: "style.css" }),
-];
+const isDev = process.env.NODE_ENV === "development";
 
 module.exports = {
-  mode: isDev ? "development" : "production",
-  entry: "./src/app/index.tsx",
-  devtool: "inline-source-map",
-  module: _module,
-  resolve: {
-    extensions: [".tsx", ".ts", ".js", ".scss"],
-  },
-  output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "src", "build"),
-  },
-  plugins,
-  optimization,
+    devtool: "hidden-source-map",
+    mode: process.env.NODE_ENV,
+    entry: "./src/app/index.tsx",
+    devServer: {
+        compress: true,
+        stats: {
+            colors: true,
+            hash: false,
+            version: false,
+            timings: false,
+            assets: true,
+            chunks: false,
+            modules: false,
+            reasons: false,
+            children: false,
+            source: false,
+            errors: true,
+            errorDetails: false,
+            warnings: true,
+            publicPath: false,
+            chunkModules: false,
+            entrypoints: false,
+        },
+    },
+    optimization: {
+        splitChunks: {
+            chunks: "all",
+        },
+    },
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: {
+                    loader: "ts-loader",
+                    options: {
+                        silent: true,
+                    },
+                },
+                exclude: /node_modules/,
+            },
+        ],
+    },
+    resolve: {
+        extensions: [".ts", ".tsx", ".js"],
+    },
+    output: {
+        filename: isDev ? "[name].bundle.js" : "[name].[hash].bundle.js",
+        path: path.resolve(__dirname, "dist"),
+    },
+    plugins: [new hwp({ template: "./src/app/static/index.html" })],
 };
