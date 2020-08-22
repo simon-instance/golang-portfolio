@@ -1,33 +1,29 @@
-import React, { useState } from "react";
+import React, { lazy } from "react";
 
-import { CSSReset, ChakraProvider, ColorModeProvider } from "@chakra-ui/core";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import theme from "@chakra-ui/theme";
+import { CSSReset, ThemeProvider, ColorModeProvider } from "@chakra-ui/core";
+import Router from "./Router";
 
-import { UserForm, Header } from "./Components";
-
-import { ColorModeProvider as MyColorModeProvider } from "./Providers/ColorModeProvider";
+const UserForm = lazy(() =>
+    import(/* webpackChunkName: "user_form" */ "./Components/UserForm")
+);
 
 const App: React.FC = () => {
     return (
-        <ChakraProvider theme={theme}>
+        <ThemeProvider>
             <ColorModeProvider>
                 <CSSReset />
                 <Router>
-                    <MyColorModeProvider>
-                        <Header />
-                        <Switch>
-                            <Route exact path="/login">
-                                <UserForm type="login" />
-                            </Route>
-                            <Route exact path="/register">
-                                <UserForm type="register" />
-                            </Route>
-                        </Switch>
-                    </MyColorModeProvider>
+                    {{
+                        routeTo: "/login",
+                        component: <UserForm type="login" />,
+                    }}
+                    {{
+                        routeTo: "/register",
+                        component: <UserForm type="register" />,
+                    }}
                 </Router>
             </ColorModeProvider>
-        </ChakraProvider>
+        </ThemeProvider>
     );
 };
 

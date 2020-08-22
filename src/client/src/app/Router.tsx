@@ -2,8 +2,6 @@ import React, { Suspense } from "react";
 
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-import { ColorModeProvider } from "./Providers/ColorModeProvider";
-
 import Header from "./Components/Header";
 
 interface Props {
@@ -17,16 +15,14 @@ interface Child {
 
 const Router: React.FC<Props> = ({ children }) => (
     <BrowserRouter>
-        <ColorModeProvider>
-            <Header />
-            <Suspense fallback={<div>loading...</div>}>
-                <Switch>
-                    {children.map(({ routeTo, component }) => (
-                        <Route exact path={routeTo} render={() => component} />
-                    ))}
-                </Switch>
-            </Suspense>
-        </ColorModeProvider>
+        <Header />
+        <Suspense fallback={<div>loading...</div>}>
+            <Switch>
+                {children.map(({ routeTo, component }) => (
+                    <Route exact path={routeTo} render={() => component} />
+                ))}
+            </Switch>
+        </Suspense>
     </BrowserRouter>
 );
 

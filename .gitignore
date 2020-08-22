@@ -7,4 +7,6 @@ src/client/node_modules
 src/client/package-lock.json
 src/client/src/build
 src/server/database/simons-portfolio-2add992d213c.json
+src/next-client/node_modules
+src/next-client/package-lock.json
 .main.go.swp

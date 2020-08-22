@@ -1,47 +1,60 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-import { ColorMode } from "../../Providers/ColorModeProvider";
-
-import { Link as CLink, Box, Button, IconButton } from "@chakra-ui/core";
+import {
+    Link as CLink,
+    Box,
+    Button,
+    IconButton,
+    useColorMode,
+} from "@chakra-ui/core";
 import { Link } from "react-router-dom";
-// import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 
-// import "./index.scss";
+import "./index.scss";
+
+import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 
 const ThemeSelector: React.FC = () => {
-    const [colorMode, toggleColorMode] = useContext(ColorMode);
+    const { colorMode, toggleColorMode } = useColorMode();
 
     return (
         <Box>
-            <IconButton aria-label="ToggleDarkMode" onClick={toggleColorMode} />
+            <IconButton
+                aria-label="ToggleDarkMode"
+                onClick={toggleColorMode}
+                icon={colorMode === "light" ? "moon" : "sun"}
+            />
         </Box>
     );
 };
 
-// const SocialMediaButtons: React.FC = () => {
-//   const links = [
-//     {
-//       href: "https://github.com/scrummer123",
-//       icon: AiFillGithub,
-//       label: "My github",
-//     },
-//     {
-//       href: "https://www.linkedin.com/in/simon-peters-0834151a1",
-//       icon: AiFillLinkedin,
-//       label: "My Linkedin",
-//     },
-//   ];
+const SocialMediaButtons: React.FC = () => {
+    const links = [
+        {
+            href: "https://github.com/scrummer123",
+            icon: AiFillGithub,
+            label: "My github",
+        },
+        {
+            href: "https://www.linkedin.com/in/simon-peters-0834151a1",
+            icon: AiFillLinkedin,
+            label: "My Linkedin",
+        },
+    ];
 
-//   return (
-//     <div>
-//       {links.map(({ href, icon, label }, i) => (
-//         <CLink key={i} href={href} isExternal ml="3">
-//           <IconButton variant="ghost" aria-label={label} icon={icon} />
-//         </CLink>
-//       ))}
-//     </div>
-//   );
-// };
+    return (
+        <div>
+            {links.map(({ href, icon, label }, i) => (
+                <CLink key={i} href={href} isExternal ml="3">
+                    <IconButton
+                        variant="ghost"
+                        aria-label={label}
+                        icon={icon}
+                    />
+                </CLink>
+            ))}
+        </div>
+    );
+};
 
 const Nav: React.FC<{ first: boolean }> = ({ first }) => {
     const links: Array<{ to: string; text: string }> = [
@@ -60,7 +73,8 @@ const Nav: React.FC<{ first: boolean }> = ({ first }) => {
     ];
 
     const variant = first === true ? "solid" : "ghost";
-    const d = first === true ? ["none", "block"] : ["block", "none"];
+    const d: Array<string> =
+        first === true ? ["none", "block"] : ["block", "none"];
 
     return (
         <Box d="flex">
@@ -81,7 +95,7 @@ const Nav: React.FC<{ first: boolean }> = ({ first }) => {
 
 const Header: React.FC = () => {
     const headerWrapper = useRef<HTMLDivElement>(null);
-    const [colorMode] = useContext(ColorMode);
+    const { colorMode } = useColorMode();
 
     // scroll vars
     let prev = 0;
@@ -125,7 +139,7 @@ const Header: React.FC = () => {
     const ButtonContainer: React.ReactNode = (
         <Box d="flex" w={["100%", "auto"]} justifyContent="space-between">
             <ThemeSelector />
-            {/* <SocialMediaButtons /> */}
+            <SocialMediaButtons />
         </Box>
     );
 
