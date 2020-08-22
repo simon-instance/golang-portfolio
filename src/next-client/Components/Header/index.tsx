@@ -32,7 +32,7 @@ const SocialMediaButtons: React.FC = () => {
             icon: AiFillLinkedin,
             label: "My Linkedin",
         },
-    ];
+    ] as const;
 
     return (
         <div>
@@ -49,8 +49,8 @@ const SocialMediaButtons: React.FC = () => {
     );
 };
 
-const Nav: React.FC<{ first: boolean }> = ({ first }) => {
-    const links: Array<{ to: string; text: string }> = [
+const Nav: React.FC<{ readonly first: boolean }> = ({ first }) => {
+    const links = [
         {
             to: "/register",
             text: "Registreren",
@@ -63,9 +63,9 @@ const Nav: React.FC<{ first: boolean }> = ({ first }) => {
             to: "test",
             text: "test",
         },
-    ];
+    ] as const;
 
-    const variant = first === true ? "solid" : "ghost";
+    const variant = first === true ? ("solid" as const) : ("ghost" as const);
     const d: Array<string> =
         first === true ? ["none", "block"] : ["block", "none"];
 
@@ -85,7 +85,7 @@ const Nav: React.FC<{ first: boolean }> = ({ first }) => {
     );
 };
 
-const Header: React.FC = () => {
+const Header: React.FC<{ setHeaderHeight }> = ({ setHeaderHeight }) => {
     const headerWrapper = useRef<HTMLDivElement>(null);
     const [colorMode, setColorMode] = useContext(DarkModeContext);
 
@@ -115,6 +115,9 @@ const Header: React.FC = () => {
     useEffect(() => {
         prev = window.scrollY;
         window.addEventListener("scroll", (e) => handleNav(e));
+        const height: number = document.getElementById("header-root")
+            .clientHeight;
+        setHeaderHeight(height);
     });
 
     //

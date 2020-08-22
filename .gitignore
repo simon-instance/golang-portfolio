@@ -9,4 +9,5 @@ src/client/src/build
 src/server/database/simons-portfolio-2add992d213c.json
 src/next-client/node_modules
 src/next-client/package-lock.json
+src/next-client/.next
 .main.go.swp
