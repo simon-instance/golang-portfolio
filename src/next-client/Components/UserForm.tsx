@@ -3,6 +3,8 @@ import {
     TryCatchHandler,
     TryCatchInterface,
     TryCatchDataInterface,
+    RequestHandler,
+    RequestHandlerProps,
 } from "../Handlers";
 import {
     Box,
@@ -14,6 +16,8 @@ import {
     useToast,
 } from "@chakra-ui/core";
 import Wrapper from "./partials/Wrapper";
+import { Formik, setNestedObjectValues, FormikProps } from "formik";
+import InputField from "./partials/forms/InputField";
 
 //
 // LoginHeader: text to inform user about what to do
@@ -38,20 +42,23 @@ const UserForm: React.FC<{ type: string }> = ({ type }) => {
     const [password, setPassword] = useState<string | null>(null);
 
     const TCHandler: TryCatchInterface = new TryCatchHandler();
-    const toast: any = useToast();
+    const RHandler: RequestHandlerProps = new RequestHandler();
+    const toast = useToast();
 
-    const HandleSubmit: () => Promise<void> = async () => {
+    const HandleSubmit: () => Promise<void> = async (
+        values,
+        { setErrors, setStatus }
+    ) => {
         if (username !== null && password !== null) {
-            const requestOptions = {
-                method: "POST",
-                body: JSON.stringify({
-                    Username: username,
-                    Password: password,
-                }),
+            RHandler.data = {
+                Username: username,
+                Password: password,
             };
+            RHandler.method = "POST";
+            RHandler.uri = `/api/auth/${type === "login" ? type : "register"}`;
 
             let data: TryCatchDataInterface = TCHandler.Data;
-            let toastConfig: object = {
+            let toastConfig = {
                 title: null,
                 description: null,
             };
@@ -99,30 +106,40 @@ const UserForm: React.FC<{ type: string }> = ({ type }) => {
 
     return (
         <Wrapper>
-            <FormControl>
-                <FormLabel my={1}>Gebruikersnaam</FormLabel>
-                <Input
-                    type="text"
-                    placeholder="Voer je gebruikersnaam in"
-                    onInput={(e: any) => setUsername(e.target.value)}
-                />
-            </FormControl>
-            <FormControl mt={4}>
-                <FormLabel my={1}>Wachtwoord</FormLabel>
-                <Input
-                    type="password"
-                    placeholder="Voer je wachtwoord in"
-                    onInput={(e: any) => setPassword(e.target.value)}
-                />
-            </FormControl>
-            <Button
-                width="full"
-                variantColor="green"
-                mt={6}
-                onClick={() => HandleSubmit()}
+            <Formik
+                initialValues={{ username: "", password: "" }}
+                onSubmit={HandleSubmit}
             >
-                Inloggen
-            </Button>
+                {(
+                    props: FormikProps<{ username: string; password: string }>
+                ) => (
+                    <form onSubmit={props.handleSubmit}>
+                        <InputField
+                            name="username"
+                            type="text"
+                            placeholder="Username"
+                            label="Username"
+                        />
+                        <Box mt={5}>
+                            <InputField
+                                name="password"
+                                type="password"
+                                placeholder="Password"
+                                label="Password"
+                            />
+                        </Box>
+                        <Button
+                            w="100%"
+                            mt={5}
+                            variantColor="teal"
+                            type="submit"
+                            isLoading={props.isSubmitting}
+                        >
+                            Login
+                        </Button>
+                    </form>
+                )}
+            </Formik>
         </Wrapper>
     );
 };

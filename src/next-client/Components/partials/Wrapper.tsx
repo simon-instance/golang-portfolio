@@ -9,13 +9,14 @@ interface WrapperProps {
 const Wrapper: React.FC<WrapperProps> = ({ children, type = "small" }) => {
     return (
         <Box
-            my="auto"
+            maxW={type === "small" ? "400px" : "800px"}
+            minH={type === "small" ? "50vh" : "80vh"}
             mx="auto"
             w="100%"
-            h={type === "small" ? "50vh" : "80vh"}
-            maxW={type === "small" ? "400px" : "800px"}
+            d="flex"
+            alignItems="center"
         >
-            {children}
+            <Box w="100%">{children}</Box>
         </Box>
     );
 };

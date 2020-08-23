@@ -11,7 +11,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div>
             <Header setHeaderHeight={setHeaderHeight} />
             <Box height={headerHeight + "px"}></Box>
-            {children};
+            {children}
         </div>
     );
 };
