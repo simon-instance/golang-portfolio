@@ -3,9 +3,8 @@ import {
     TryCatchHandler,
     TryCatchInterface,
     TryCatchDataInterface,
-} from "../../Handlers";
+} from "../Handlers";
 import {
-    Flex,
     Box,
     Heading,
     FormControl,
@@ -14,12 +13,13 @@ import {
     Button,
     useToast,
 } from "@chakra-ui/core";
+import Wrapper from "./partials/Wrapper";
 
 //
 // LoginHeader: text to inform user about what to do
 //
 
-const LoginHeader: React.FC<{ type: string }> = ({ type }) => {
+const LoginHeader: React.FC<{ readonly type: string }> = ({ type }) => {
     return (
         <Box>
             <Heading as="h3">
@@ -30,17 +30,17 @@ const LoginHeader: React.FC<{ type: string }> = ({ type }) => {
 };
 
 //
-// LoginForm: fields to let the user login
+// Login: main component
 //
 
-const LoginForm: React.FC<{ type: string }> = ({ type }) => {
+const UserForm: React.FC<{ type: string }> = ({ type }) => {
     const [username, setUsername] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
 
     const TCHandler: TryCatchInterface = new TryCatchHandler();
     const toast: any = useToast();
 
-    const HandleSubmit: VoidFunction = async () => {
+    const HandleSubmit: () => Promise<void> = async () => {
         if (username !== null && password !== null) {
             const requestOptions = {
                 method: "POST",
@@ -98,7 +98,7 @@ const LoginForm: React.FC<{ type: string }> = ({ type }) => {
     };
 
     return (
-        <Box mt="8">
+        <Wrapper>
             <FormControl>
                 <FormLabel my={1}>Gebruikersnaam</FormLabel>
                 <Input
@@ -123,26 +123,7 @@ const LoginForm: React.FC<{ type: string }> = ({ type }) => {
             >
                 Inloggen
             </Button>
-        </Box>
-    );
-};
-
-//
-// Login: main component
-//
-
-const UserForm: React.FC<{ readonly type: string }> = ({ type }) => {
-    return (
-        <Box
-            d="flex"
-            minHeight="60vh"
-            justifyContent="center"
-            alignItems="center"
-        >
-            <Box borderWidth={1} px="8" py="12" m={4}>
-                <LoginHeader type={type} /> <LoginForm type={type} />
-            </Box>
-        </Box>
+        </Wrapper>
     );
 };
 

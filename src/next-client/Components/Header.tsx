@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 
 import { Link as CLink, Box, Button, IconButton } from "@chakra-ui/core";
 
-import { DarkModeContext } from "../../Providers/DarkModeProvider";
+import { DarkModeContext } from "../Providers/DarkModeProvider";
 
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 

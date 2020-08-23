@@ -3,6 +3,8 @@
     "moduleResolution": "node",
     "outDir": "./src/build/",
     "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "module": "esnext",
     "target": "es5",
     "jsx": "preserve",
@@ -11,11 +13,7 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "removeComments": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
@@ -23,10 +21,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": [
-    "./src/**/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./src/**/**/*"],
+  "exclude": ["node_modules"]
 }
