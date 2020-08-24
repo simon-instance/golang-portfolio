@@ -1,5 +1,5 @@
 // Receive props from api. Specifies which fields are filled in wrong.
-export default interface AuthFields {
+export interface UserFields {
     username?: string;
     password?: string;
 }

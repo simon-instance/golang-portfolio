@@ -1,4 +1,3 @@
-import AuthFields from "./AuthFields";
 import User from "./User";
 
 //
@@ -8,7 +7,6 @@ import User from "./User";
 export default interface Response {
     data:
         | {
-              fields?: Fields;
               message?: string;
               User?: User;
           }

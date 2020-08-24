@@ -1,3 +1,5 @@
+import { UserFields } from "./FormFields";
+
 export default interface User {
     id: string;
     username: string;
@@ -5,4 +7,5 @@ export default interface User {
         title: string;
         content: string;
     };
+    fields?: UserFields;
 }
