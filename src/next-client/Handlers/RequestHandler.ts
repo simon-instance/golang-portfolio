@@ -1,4 +1,4 @@
-import { TryCatchHandler, TryCatchInterface, TryCatchDataInterface } from "./";
+import { TryCatchHandler, TryCatchProps, TryCatchDataProps } from "./";
 
 export interface HandlerProps {
     data: object | undefined;
@@ -19,23 +19,15 @@ export class Handler implements HandlerProps {
         this.data = undefined;
     }
 
-    makeRequest(): any {
-        const TCHandler: TryCatchInterface = new TryCatchHandler();
+    async makeRequest(): Promise<TryCatchDataProps> {
+        const TCHandler: TryCatchProps = new TryCatchHandler();
 
+        let data: TryCatchDataProps = TCHandler.Data;
         try {
-            const response: any = await fetch(
-                `${Handler.baseUrl}${
-                    this.uri.endsWith("/") ? this.uri : this.uri + "/"
-                }`,
-                {
-                    method: this.method,
-                    body: JSON.stringify(this.data),
-                }
-            );
-
-            let data: TryCatchDataInterface = TCHandler.Data;
-
-            //TODO
+            const response: any = await fetch(`${Handler.baseUrl}${this.uri}`, {
+                method: this.method,
+                body: JSON.stringify(this.data),
+            });
 
             data.response.data = await response.json();
             data.response.status = response.status;
@@ -45,9 +37,7 @@ export class Handler implements HandlerProps {
         } catch (e) {
             data.error.status = true;
             data.error.message = e;
-        } finally {
-            console.log(data.error.status);
-            TCHandler.Data = data;
         }
+        return data;
     }
 }
